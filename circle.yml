@@ -1,0 +1,21 @@
+machine:
+  services:
+    - docker
+  environment:
+    IMAGE_NAME: "widla/docker-gcloud"
+
+dependencies:
+  override:
+    - docker info
+
+test:
+  override:
+    - docker version
+    - docker build --rm=false -t $IMAGE_NAME .
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push $IMAGE_NAME
